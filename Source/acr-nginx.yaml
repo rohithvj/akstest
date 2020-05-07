@@ -1,21 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx0-deployment
+  name: mapping
   labels:
-    app: nginx0-deployment
+    app: mapping
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: nginx0
+      app: mapping
   template:
     metadata:
       labels:
-        app: nginx0
+        app: mapping
     spec:
       containers:
-      - name: nginx
-        image: acrtejit.azurecr.io/nginx:#{Build.BuildId}#
+      - name: mapping
+        image: kpmgacr.azurecr.io/nginx:#{Build.BuildId}#
         ports:
         - containerPort: 80
+        envFrom:
+          - configMapRef:
+              name: mapping-configmap
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mapping
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+          app: mapping
