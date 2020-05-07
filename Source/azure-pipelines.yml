@@ -1,0 +1,19 @@
+pool:
+  name: Hosted Ubuntu 1604
+  demands: npm
+
+steps:
+- task: Npm@1
+  displayName: 'npm install'
+  inputs:
+    workingDir: 
+    verbose: false
+
+- script: |
+   docker build --rm -f Dockerfile -t nginxaks:latest .
+   docker images
+   docker tag nginxaks:latest acrtejit.azurecr.io/nginxaks:latest
+   docker images
+   docker login -u acrtejit -p BUMI1sp0A88EJQU5gXX7hzXx6S+JycW4 acrtejit.azurecr.io
+   docker push acrtejit.azurecr.io/nginxaks:latest
+ 
